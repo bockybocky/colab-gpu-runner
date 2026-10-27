@@ -20,8 +20,8 @@ Includes a working example: one photo → MiniMax H3 image-to-video (with audio)
 
 ## 需要先裝
 
-- [google-colab-cli](https://pypi.org/project/google-colab-cli/)（指令 `colab`），需要 Colab 付費方案才有 G4／A100
-- [gog](https://github.com/steipete/gogcli)（Google 雲端硬碟命令列），先用自己的帳號登入
+- [google-colab-cli](https://pypi.org/project/google-colab-cli/)（指令 `colab`，建議 `uv tool install google-colab-cli`；裝完若提示不在系統路徑可以不理，程式會自己去 `~/.local/bin` 找），需要 Colab 付費方案才有 G4／A100
+- [gog](https://github.com/openclaw/gogcli)（Google 雲端硬碟命令列），先用自己的帳號登入
 - Python 3.10＋Pillow、PowerShell 7
 
 ## 先檢查這台電腦
@@ -38,7 +38,7 @@ python check_env.py
 
 | Colab 顯示卡 | 顯存 | 能不能跑 H3 這套 |
 |---|---|---|
-| G4（RTX PRO 6000 Blackwell） | 96GB | 可以，實測最快，預設用這張 |
+| G4（RTX PRO 6000 Blackwell） | 96GB | **優先借這張**：實測最快（比 A100 快約 1.6 倍），程式預設就是它 |
 | A100 | 80GB 或 40GB | 配到 80GB 可以；配到 40GB 會被擋下，重借一次 |
 | H100 | 80GB | 顯存夠，未實測 |
 | T4／L4 | 16／24GB | 不行，顯存不夠 |

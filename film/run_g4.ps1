@@ -7,11 +7,15 @@ param(
     [ValidateSet('G4','A100','H100')][string]$Gpu = 'G4',
     [string]$DriveFolder = 'colab_outputs',
     [string]$GogCredentials = (Join-Path $env:APPDATA 'gogcli\credentials.json'),
-    [string]$Colab = 'colab',
+    [string]$Colab = '',
     [switch]$SmokeTest,
     [switch]$EmitBase64
 )
 $ErrorActionPreference = 'Stop'
+if (-not $Colab) {
+    # uv tool install 預設裝在 ~/.local/bin，常常不在系統路徑上
+    $Colab = if (Get-Command colab -ErrorAction SilentlyContinue) { 'colab' } else { Join-Path $HOME '.local/bin/colab.exe' }
+}
 if (-not $RemoteJob) { $RemoteJob = Join-Path $Root 'remote_job.py' }
 $Out = Join-Path $Root 'out'
 $RunLog = Join-Path $Root 'run.log'

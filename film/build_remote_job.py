@@ -2,7 +2,7 @@
 
 用法：
   python build_remote_job.py --image start.png --prompt "畫面描述" --out-dir ./job
-  之後：powershell -File run_g4.ps1 -Root ./job -GoogleAccount you@gmail.com
+  之後：pwsh run_g4.ps1 -Root ./job -GoogleAccount you@gmail.com
 
 流程：MiniMax H3 小圖 30 步 → 潛空間放大兩倍 → 重算 10 步 → SeedVR2 放大 1.5 倍 → RIFE 24→48 格。
 """

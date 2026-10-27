@@ -66,6 +66,12 @@ if platform.system() != "Windows":
            "執行時自己指定 -GogCredentials <gog 的 credentials.json 路徑>")
 
 colab = shutil.which("colab")
+if not colab:
+    # uv tool install 預設裝在 ~/.local/bin，常常不在系統路徑上
+    for cand in (Path.home() / ".local" / "bin" / "colab.exe", Path.home() / ".local" / "bin" / "colab"):
+        if cand.exists():
+            colab = str(cand)
+            break
 if colab:
     rc, out = run([colab, "run", "--help"])
     if rc == 0 and "--env" in out and "--gpu" in out:
@@ -93,7 +99,7 @@ if gog:
     else:
         report("FAIL", "gog 登入", "沒有登入的帳號", "gog auth add <你的 Gmail>，並開啟 Drive 權限")
 else:
-    report("FAIL", "gog", "找不到 gog 指令", "安裝：https://github.com/steipete/gogcli")
+    report("FAIL", "gog", "找不到 gog 指令", "安裝：https://github.com/openclaw/gogcli")
 
 try:
     import urllib.request
