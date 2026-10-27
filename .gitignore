@@ -1,0 +1,6 @@
+job/
+out/
+*.log
+__pycache__/
+*.mp4
+
