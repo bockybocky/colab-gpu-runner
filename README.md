@@ -71,7 +71,7 @@ pwsh film/run_g4.ps1 -Root ./job -GoogleAccount you@gmail.com
 
 ## 實測數字（2026-10，G4＝RTX PRO 6000 Blackwell 96GB）
 
-- bf16 矩陣乘法：G4 約 423 TFLOPS，A100 80GB 約 268，G4 快約 1.6 倍
+- bf16 矩陣乘法：G4 約 423 TFLOPS（2026-11-01 用 `g4_probe.py` 重測 422.8，仍相符），A100 80GB 約 268，G4 快約 1.6 倍
 - 5 秒一段（768×1344 → 1152×2016、48 格）：開機到釋放約 9～10 分鐘，約 1.2 運算單元
 - 10 秒一段：約 17.5 分鐘、2.1 單元；15 秒一段（單段上限 362 格）：約 24 分鐘、3.1～3.4 單元
 - 從 Hugging Face 直接下載 7 個模型約 3 分鐘，比從雲端硬碟複製（約 22 分鐘）快很多
@@ -86,6 +86,19 @@ pwsh film/run_g4.ps1 -Root ./job -GoogleAccount you@gmail.com
 5. **ComfyUI 流程嵌進 Python 要包成字串再 `json.loads`**，直接貼 JSON 會因 `true/false/null` 出錯。
 6. **雲端硬碟權杖一小時過期**，所以範本在生成完、上傳前才換新權杖。
 7. 遠端腳本自帶 70 分鐘硬逾時，留 5 分鐘給 `colab run` 釋放機器。
+8. **Windows 請固定用 google-colab-cli 0.7.4，並修補一個檔。** 2026-11-01 實測：0.7.5 在 Windows 上機器開好、一跑腳本就斷線（`WebSocketConnectionClosedException: socket is already closed`），連試兩次都一樣；0.7.4 原版則一啟動就因 `import termios`（Linux 才有）失敗。做法：
+   ```powershell
+   uv tool install --python 3.12 google-colab-cli==0.7.4 --force
+   ```
+   再打開 `%APPDATA%\uv\tools\google-colab-cli\Lib\site-packages\colab_cli\console.py`，把 `import termios`、`import tty` 各改成：
+   ```python
+   try:
+       import termios
+   except ImportError:
+       termios = None
+   ```
+   只影響 `console`／`ssh` 的鍵盤轉送，`run`／`sessions`／`stop`／`usage` 都正常。重裝或升級會蓋掉這個修補。
+9. **關掉自動檢查更新**：在 `~/.config/colab-cli/settings.json` 寫 `{"enable_update_check": false}`，免得新版提示混進輸出，或被提示誘導升到 0.7.5。
 
 ## 模型與授權
 
